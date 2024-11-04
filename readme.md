@@ -4,6 +4,13 @@
 
 This is a simple kernel module that implements a cache for NFS getattr calls. We built this after noticing high metadata requests on EFS. These requests were due to the application reading the same directory over and over again, continuously waiting for new files to be created. Since we couldn't change the application code, we implemented a cache in the kernel to reduce the metadata requests by 99,73%.
 
+## Results
+
+![Cache Results](results.png)
+
+The graph shows the reduction in metadata requests after implementing the cache. The blue line represents metadata throughput. We achieved a 99.73% reduction in metadata requests by caching getattr calls for 1 second.
+
+
 ## Prerequisites
 
 * Linux kernel headers (linux-headers-$(uname -r))
