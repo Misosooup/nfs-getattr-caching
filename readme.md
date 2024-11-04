@@ -1,8 +1,8 @@
 # NFS Getattr Cache
 
-## Description
+## Description & Motivation
 
-This is a simple kernel module that implements a cache for NFS getattr calls.
+This is a simple kernel module that implements a cache for NFS getattr calls. We built this after noticing high metadata requests on EFS. These requests were due to the application reading the same directory over and over again, continuously waiting for new files to be created. Since we couldn't change the application code, we implemented a cache in the kernel to reduce the metadata requests by 99,73%.
 
 ## Prerequisites
 
