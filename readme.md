@@ -8,7 +8,7 @@ This is a simple kernel module that implements a cache for NFS getattr calls. We
 
 ![Cache Results](results.png)
 
-The graph shows the reduction in metadata requests after implementing the cache. The blue line represents metadata throughput. We achieved a 99.73% reduction in metadata requests by caching getattr calls for 1 second.
+The graph shows the reduction in metadata requests after implementing the cache. The blue line represents metadata throughput (sum of IO bytes per 15 minutes). We achieved a 99.73% reduction in metadata requests by caching getattr calls for 1 second.
 
 
 ## Prerequisites
