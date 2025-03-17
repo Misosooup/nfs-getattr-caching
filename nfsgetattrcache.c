@@ -22,7 +22,7 @@ MODULE_DESCRIPTION("NFS getattr cache for specific paths");
 
 // Cache path configuration
 static const char *cached_paths[] = {
-    "/tmp/nfs"
+    "/home/nfs/cache"
 };
 
 #define NUM_CACHED_PATHS (sizeof(cached_paths) / sizeof(cached_paths[0]))
