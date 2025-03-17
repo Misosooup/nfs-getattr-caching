@@ -22,7 +22,7 @@ MODULE_DESCRIPTION("NFS getattr cache for specific paths");
 
 // Cache path configuration
 static const char *cached_paths[] = {
-    "/path/to/cache"
+    "/tmp/nfs"
 };
 
 #define NUM_CACHED_PATHS (sizeof(cached_paths) / sizeof(cached_paths[0]))
@@ -89,8 +89,9 @@ static void cleanup_worker(struct work_struct *work)
                       msecs_to_jiffies(CLEANUP_INTERVAL_MS));
 }
 
-static int cached_getattr(const struct path *path, struct kstat *stat,
-                         u32 request_mask, unsigned int query_flags)
+static int cached_getattr(struct user_namespace *user_ns,
+                          const struct path *path, struct kstat *stat,
+                          u32 request_mask, unsigned int query_flags)
 {
     struct getattr_cache_entry *entry;
     unsigned long now = jiffies;
@@ -104,12 +105,12 @@ static int cached_getattr(const struct path *path, struct kstat *stat,
 
     fullpath = get_full_path(path, pathbuf, MAX_PATH_LEN);
     if (!fullpath) {
-        return original_iops->getattr(path, stat, request_mask, query_flags);
+        return original_iops->getattr(user_ns, path, stat, request_mask, query_flags);
     }
 
     // Only cache specific paths
     if (!should_cache_path(fullpath)) {
-        return original_iops->getattr(path, stat, request_mask, query_flags);
+        return original_iops->getattr(user_ns, path, stat, request_mask, query_flags);
     }
 
     spin_lock(&cache_lock);
@@ -127,7 +128,7 @@ static int cached_getattr(const struct path *path, struct kstat *stat,
     atomic_inc(&cache_misses);
 
     // Call original getattr
-    ret = original_iops->getattr(path, stat, request_mask, query_flags);
+    ret = original_iops->getattr(user_ns, path, stat, request_mask, query_flags);
     if (ret) {
         return ret;
     }
@@ -162,7 +163,7 @@ static int __init getattr_cache_init(void)
     int ret, i;
 
     // Try to get the root NFS mount first
-    ret = kern_path("/data/roularta-smartmover", 0, &path);
+    ret = kern_path("/codebase", 0, &path);
     if (ret) {
         printk(KERN_ERR "NFS cache: Failed to find NFS mount point\n");
         return ret;
