@@ -16,8 +16,8 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Robin Verstraelen");
 MODULE_DESCRIPTION("NFS getattr cache for specific paths");
 
-#define CACHE_TIMEOUT_MS 1000  // 1 second TTL
-#define CLEANUP_INTERVAL_MS 5000  // Cleanup every 5 seconds
+#define CACHE_TIMEOUT_MS 300000  // 1 second TTL
+#define CLEANUP_INTERVAL_MS 400000  // Cleanup every 5 seconds
 #define MAX_PATH_LEN 256
 
 // Cache path configuration
